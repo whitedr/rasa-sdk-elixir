@@ -2,9 +2,9 @@
 # https://openapi-generator.tech
 # Do not edit the class manually.
 
-defmodule RasaSdk.Model.InlineResponse200 do
+defmodule RasaSdk.Model.ResponseOk do
   @moduledoc """
-  
+  Action was executed succesfully.
   """
 
   @derive [Poison.Encoder]
@@ -19,7 +19,7 @@ defmodule RasaSdk.Model.InlineResponse200 do
   }
 end
 
-defimpl Poison.Decoder, for: RasaSdk.Model.InlineResponse200 do
+defimpl Poison.Decoder, for: RasaSdk.Model.ResponseOk do
   import RasaSdk.Deserializer
   def decode(value, options) do
     value

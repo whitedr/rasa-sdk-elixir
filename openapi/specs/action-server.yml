@@ -26,39 +26,14 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                next_action:
-                  description: The name of the action which should be executed.
-                  type: string
-                sender_id:
-                  description: >-
-                    Unique id of the user who is having the
-                    current conversation.
-                  type: string
-                tracker:
-                  $ref: "./rasa.yml#/components/schemas/Tracker"
-                domain:
-                  $ref: "./rasa.yml#/components/schemas/Domain"
+              $ref: "#/components/schemas/Request"
       responses:
         200:
           description: Action was executed succesfully.
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  events:
-                    description: Events returned by the action.
-                    type: array
-                    items:
-                      $ref: "./rasa.yml#/components/schemas/Event"
-                  responses:
-                    description: >-
-                      List of responses which should be sent to the user
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Response"
+                $ref: "#/components/schemas/ResponseOk"
         400:
           description: >-
             Action execution was rejected. This is the same as returning
@@ -66,20 +41,56 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  action_name:
-                    type: string
-                    description: >-
-                      Name of the action which rejected its execution.
-                  error:
-                    type: string
-                    description: The error message.
+                $ref: "#/components/schemas/ResponseRejected"
         500:
           description: >-
             The action server encountered an exception while running the action.
 components:
   schemas:
+    Request:
+      description: Describes the action to be called and provides information on the current state of the conversation.
+      type: object
+      properties:
+        next_action:
+          description: The name of the action which should be executed.
+          type: string
+        sender_id:
+          description: >-
+            Unique id of the user who is having the
+            current conversation.
+          type: string
+        tracker:
+          $ref: "./rasa.yml#/components/schemas/Tracker"
+        domain:
+          $ref: "./rasa.yml#/components/schemas/Domain"
+    ResponseOk:
+      description: Action was executed succesfully.
+      type: object
+      properties:
+        events:
+          description: Events returned by the action.
+          type: array
+          items:
+            $ref: "./rasa.yml#/components/schemas/Event"
+        responses:
+          description: >-
+            List of responses which should be sent to the user
+          type: array
+          items:
+            $ref: "#/components/schemas/Response"
+    ResponseRejected:
+      description: >-
+        Action execution was rejected. This is the same as returning
+        an `ActionExecutionRejected` event.
+      type: object
+      properties:
+        action_name:
+          type: string
+          description: >-
+            Name of the action which rejected its execution.
+        error:
+          type: string
+          description: The error message.
     Response:
       oneOf:
         - $ref: '#/components/schemas/TextResponse'

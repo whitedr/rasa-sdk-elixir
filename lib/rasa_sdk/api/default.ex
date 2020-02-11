@@ -18,24 +18,24 @@ defmodule RasaSdk.Api.Default do
   ## Parameters
 
   - connection (RasaSdk.Connection): Connection to server
-  - inline_object (InlineObject): 
+  - request (Request): Describes the action to be called and provides information on the current state of the conversation.
   - opts (KeywordList): [optional] Optional parameters
   ## Returns
 
-  {:ok, %RasaSdk.Model.InlineResponse200{}} on success
+  {:ok, %RasaSdk.Model.ResponseOk{}} on success
   {:error, info} on failure
   """
-  @spec call_action(Tesla.Env.client, RasaSdk.Model.InlineObject.t, keyword()) :: {:ok, RasaSdk.Model.InlineResponse200.t} | {:error, Tesla.Env.t}
-  def call_action(connection, inline_object, _opts \\ []) do
+  @spec call_action(Tesla.Env.client, RasaSdk.Model.Request.t, keyword()) :: {:ok, RasaSdk.Model.ResponseOk.t} | {:error, Tesla.Env.t}
+  def call_action(connection, request, _opts \\ []) do
     %{}
     |> method(:post)
     |> url("/")
-    |> add_param(:body, :body, inline_object)
+    |> add_param(:body, :body, request)
     |> Enum.into([])
     |> (&Connection.request(connection, &1)).()
     |> evaluate_response([
-      { 200, %RasaSdk.Model.InlineResponse200{}},
-      { 400, %RasaSdk.Model.InlineResponse400{}},
+      { 200, %RasaSdk.Model.ResponseOk{}},
+      { 400, %RasaSdk.Model.ResponseRejected{}},
       { 500, false}
     ])
   end

@@ -3,9 +3,9 @@ defmodule RasaSdkActionsTest do
 
   alias RasaSdk.Actions.{Action, Context, Events, FormAction}
   alias RasaSdk.Model.Tracker
-  alias RasaSdk.Model.InlineObject, as: Request
+  alias RasaSdk.Model.Request
   # alias RasaSdk.Model.InlineResponse200, as: Response
-  alias RasaSdk.Model.InlineResponse400, as: Error
+  alias RasaSdk.Model.ResponseRejected
 
   defmodule CustomAction do
     @behaviour Action
@@ -50,7 +50,10 @@ defmodule RasaSdkActionsTest do
         |> Context.new()
         |> RasaSdk.Actions.Registry.execute()
 
-      assert context.error == %Error{action_name: "bogus_action", error: "action not found"}
+      assert context.error == %ResponseRejected{
+               action_name: "bogus_action",
+               error: "action not found"
+             }
     end
 
     test "valid action registration" do

@@ -3,9 +3,7 @@ defmodule RasaSdkActionsFormTest do
 
   alias RasaSdk.Actions.{Context, Events, FormAction}
   alias RasaSdk.Model.{Entity, Intent, ParseResult, Tracker}
-  alias RasaSdk.Model.InlineObject, as: Request
-  # alias RasaSdk.Model.InlineResponse200, as: Response
-  # alias RasaSdk.Model.InlineResponse400, as: Error
+  alias RasaSdk.Model.Request
 
   defmodule SlotFromEntityNoIntent do
     use FormAction

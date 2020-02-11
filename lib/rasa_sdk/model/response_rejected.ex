@@ -2,9 +2,9 @@
 # https://openapi-generator.tech
 # Do not edit the class manually.
 
-defmodule RasaSdk.Model.InlineResponse400 do
+defmodule RasaSdk.Model.ResponseRejected do
   @moduledoc """
-  
+  Action execution was rejected. This is the same as returning an &#x60;ActionExecutionRejected&#x60; event.
   """
 
   @derive [Poison.Encoder]
@@ -19,7 +19,7 @@ defmodule RasaSdk.Model.InlineResponse400 do
   }
 end
 
-defimpl Poison.Decoder, for: RasaSdk.Model.InlineResponse400 do
+defimpl Poison.Decoder, for: RasaSdk.Model.ResponseRejected do
   def decode(value, _options) do
     value
   end

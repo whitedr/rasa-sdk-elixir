@@ -1,8 +1,8 @@
 defmodule RasaSdk.Actions.Context do
   alias RasaSdk.Model.{ParseResult, Tracker}
-  alias RasaSdk.Model.InlineObject, as: Request
-  alias RasaSdk.Model.InlineResponse200, as: Response
-  alias RasaSdk.Model.InlineResponse400, as: Error
+  alias RasaSdk.Model.Request
+  alias RasaSdk.Model.ResponseOk
+  alias RasaSdk.Model.ResponseRejected
 
   require Logger
 
@@ -16,14 +16,14 @@ defmodule RasaSdk.Actions.Context do
   @type t :: %__MODULE__{
           :conversation_id => String.t() | nil,
           :request => Request.t() | nil,
-          :response => Response.t() | nil,
-          :error => Error.t() | nil
+          :response => ResponseOk.t() | nil,
+          :error => ResponseRejected.t() | nil
         }
 
   def new(request) do
     %__MODULE__{
       request: request,
-      response: %Response{
+      response: %ResponseOk{
         events: [],
         responses: []
       }
@@ -164,6 +164,6 @@ defmodule RasaSdk.Actions.Context do
   end
 
   def set_error(%__MODULE__{} = context, action_name, error) do
-    Map.replace!(context, :error, %Error{action_name: action_name, error: error})
+    Map.replace!(context, :error, %ResponseRejected{action_name: action_name, error: error})
   end
 end

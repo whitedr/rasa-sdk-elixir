@@ -11,7 +11,7 @@ defmodule RasaSdk.Actions.Plug do
   def call(%Plug.Conn{body_params: body_params} = conn, _opts) do
     context =
       body_params
-      |> Poison.Decode.decode(as: %RasaSdk.Model.InlineObject{})
+      |> Poison.Decode.decode(as: %RasaSdk.Model.Request{})
       |> Context.new()
       |> Registry.execute()
 

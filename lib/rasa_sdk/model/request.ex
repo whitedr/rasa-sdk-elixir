@@ -2,9 +2,9 @@
 # https://openapi-generator.tech
 # Do not edit the class manually.
 
-defmodule RasaSdk.Model.InlineObject do
+defmodule RasaSdk.Model.Request do
   @moduledoc """
-  
+  Describes the action to be called and provides information on the current state of the conversation.
   """
 
   @derive [Poison.Encoder]
@@ -23,7 +23,7 @@ defmodule RasaSdk.Model.InlineObject do
   }
 end
 
-defimpl Poison.Decoder, for: RasaSdk.Model.InlineObject do
+defimpl Poison.Decoder, for: RasaSdk.Model.Request do
   import RasaSdk.Deserializer
   def decode(value, options) do
     value

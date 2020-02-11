@@ -1,8 +1,7 @@
 defmodule RasaSdk.Actions.FormAction do
   alias RasaSdk.Actions.Context
-  alias RasaSdk.Model.InlineObject, as: Request
-  alias RasaSdk.Model.InlineResponse200, as: Response
-  # alias RasaSdk.Model.InlineResponse400, as: Error
+  alias RasaSdk.Model.Request
+  alias RasaSdk.Model.ResponseOk
   alias RasaSdk.Model.{ParseResult, Tracker}
 
   require Logger
@@ -127,7 +126,7 @@ defmodule RasaSdk.Actions.FormAction do
       end
 
       defp set_slots_from_events(
-             %Context{request: %Request{tracker: tracker}, response: %Response{events: events}} =
+             %Context{request: %Request{tracker: tracker}, response: %ResponseOk{events: events}} =
                context
            ) do
         Enum.reduce(events, context, fn event, acc ->
@@ -140,7 +139,7 @@ defmodule RasaSdk.Actions.FormAction do
       end
 
       defp request_slots(
-             %Context{request: %Request{tracker: tracker}, response: %Response{events: events}} =
+             %Context{request: %Request{tracker: tracker}, response: %ResponseOk{events: events}} =
                context
            ) do
         if not Enum.member?(events, form(nil)) do
