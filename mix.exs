@@ -2,16 +2,18 @@ defmodule RasaSdk.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :rasa_sdk,
-     version: "0.0.0",
-     build_path: "./_build",
-     config_path: "./config/config.exs",
-     deps_path: "./deps",
-     lockfile: "./mix.lock",
-     elixir: "~> 1.6",
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     deps: deps()]
+    [
+      app: :rasa_sdk,
+      version: "0.0.0",
+      build_path: "./_build",
+      config_path: "./config/config.exs",
+      deps_path: "./deps",
+      lockfile: "./mix.lock",
+      elixir: "~> 1.6",
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
+      deps: deps()
+    ]
   end
 
   # Configuration for the OTP application
@@ -34,7 +36,8 @@ defmodule RasaSdk.Mixfile do
   defp deps do
     [
       {:tesla, "~> 1.2"},
-      {:poison, "~> 3.0"}
+      {:poison, "~> 3.0"},
+      {:plug, "~> 1.8"}
     ]
   end
 end
