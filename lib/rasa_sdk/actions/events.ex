@@ -1,7 +1,7 @@
 defmodule RasaSdk.Actions.Events do
-  @type event :: %{atom() => any()}
+  @type t :: %{atom() => any()}
 
-  @spec user_uttered(String.t(), map(), String.t(), float() | nil) :: event
+  @spec user_uttered(String.t(), map(), String.t(), float() | nil) :: t
   def user_uttered(text, parse_data, input_channel, timestamp \\ nil) do
     %{
       event: "user",
@@ -12,7 +12,7 @@ defmodule RasaSdk.Actions.Events do
     }
   end
 
-  @spec bot_uttered(String.t(), map(), map(), float() | nil) :: event
+  @spec bot_uttered(String.t(), map(), map(), float() | nil) :: t
   def bot_uttered(text, data, metadata, timestamp \\ nil) do
     %{
       event: "bot",
@@ -23,7 +23,7 @@ defmodule RasaSdk.Actions.Events do
     }
   end
 
-  @spec slot_set(String.t(), any(), float() | nil) :: event
+  @spec slot_set(String.t(), any(), float() | nil) :: t
   def slot_set(key, value, timestamp \\ nil) do
     %{
       event: "slot",
@@ -33,17 +33,16 @@ defmodule RasaSdk.Actions.Events do
     }
   end
 
-  @spec restarted(float() | nil) :: event
+  @spec restarted(float() | nil) :: t
   def restarted(timestamp \\ nil), do: %{event: "restart", timestamp: timestamp}
 
-  @spec user_utterance_reverted(float() | nil) :: event
+  @spec user_utterance_reverted(float() | nil) :: t
   def user_utterance_reverted(timestamp \\ nil), do: %{event: "rewind", timestamp: timestamp}
 
-  @spec all_slots_reset(float() | nil) :: event
+  @spec all_slots_reset(float() | nil) :: t
   def all_slots_reset(timestamp \\ nil), do: %{event: "reset_slots", timestamp: timestamp}
 
-  @spec reminder_scheduled(String.t(), DateTime.t(), String.t(), boolean(), float() | nil) ::
-          event
+  @spec reminder_scheduled(String.t(), DateTime.t(), String.t(), boolean(), float() | nil) :: t
   def reminder_scheduled(
         action_name,
         trigger_date_time,
@@ -61,7 +60,7 @@ defmodule RasaSdk.Actions.Events do
     }
   end
 
-  @spec reminder_cancelled(String.t(), String.t(), float() | nil) :: event
+  @spec reminder_cancelled(String.t(), String.t(), float() | nil) :: t
   def reminder_cancelled(action_name, name, timestamp \\ nil) do
     %{
       event: "cancel_reminder",
@@ -71,18 +70,24 @@ defmodule RasaSdk.Actions.Events do
     }
   end
 
+  @spec action_reverted(float() | nil) :: t
   def action_reverted(timestamp \\ nil), do: %{event: "undo", timestamp: timestamp}
 
+  @spec story_exported(float() | nil) :: t
   def story_exported(timestamp \\ nil), do: %{event: "export", timestamp: timestamp}
 
+  @spec followup_action(String.t(), float() | nil) :: t
   def followup_action(name, timestamp \\ nil) do
     %{event: "followup", name: name, timestamp: timestamp}
   end
 
+  @spec conversation_paused(float() | nil) :: t
   def conversation_paused(timestamp \\ nil), do: %{event: "pause", timestamp: timestamp}
 
+  @spec conversation_resumed(float() | nil) :: t
   def conversation_resumed(timestamp \\ nil), do: %{event: "resume", timestamp: timestamp}
 
+  @spec action_executed(String.t(), String.t() | nil, float() | nil, float() | nil) :: t
   def action_executed(action_name, policy \\ nil, confidence \\ nil, timestamp \\ nil) do
     %{
       event: "action",
@@ -93,6 +98,7 @@ defmodule RasaSdk.Actions.Events do
     }
   end
 
+  @spec agent_uttered(String.t(), any(), float() | nil) :: t
   def agent_uttered(text, data, timestamp \\ nil) do
     %{
       event: "agent",

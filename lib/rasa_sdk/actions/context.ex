@@ -156,7 +156,7 @@ defmodule RasaSdk.Actions.Context do
     end)
   end
 
-  @spec add_event(__MODULE__.t(), map()) :: __MODULE__.t()
+  @spec add_event(__MODULE__.t(), RasaSdk.Actions.Events.t()) :: __MODULE__.t()
   def add_event(%__MODULE__{} = context, event) do
     update_in(context, [Access.key(:response), Access.key(:events)], fn events ->
       events ++ [event]
