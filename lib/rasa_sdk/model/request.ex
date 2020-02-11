@@ -7,21 +7,18 @@ defmodule RasaSdk.Model.Request do
   Describes the action to be called and provides information on the current state of the conversation.
   """
   alias RasaSdk.Model.Tracker
-  alias RasaSdk.Model.Domain
 
   @derive [Poison.Encoder]
   defstruct [
     :next_action,
     :sender_id,
-    :tracker,
-    :domain
+    :tracker
   ]
 
   @type t :: %__MODULE__{
     next_action: String.t | nil,
     sender_id: String.t | nil,
-    tracker: Tracker | nil,
-    domain: Domain | nil
+    tracker: Tracker | nil
   }
 end
 
@@ -30,7 +27,6 @@ defimpl Poison.Decoder, for: RasaSdk.Model.Request do
   def decode(value, options) do
     value
     |> deserialize(:tracker, :struct, RasaSdk.Model.Tracker, options)
-    |> deserialize(:domain, :struct, RasaSdk.Model.Domain, options)
   end
 end
 
