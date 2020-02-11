@@ -6,6 +6,7 @@ defmodule RasaSdk.Model.Response do
   @moduledoc """
   
   """
+  alias RasaSdk.Model.Button
 
   @derive [Poison.Encoder]
   defstruct [

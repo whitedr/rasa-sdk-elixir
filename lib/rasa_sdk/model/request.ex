@@ -6,6 +6,8 @@ defmodule RasaSdk.Model.Request do
   @moduledoc """
   Describes the action to be called and provides information on the current state of the conversation.
   """
+  alias RasaSdk.Model.Tracker
+  alias RasaSdk.Model.Domain
 
   @derive [Poison.Encoder]
   defstruct [

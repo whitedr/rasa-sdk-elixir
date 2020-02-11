@@ -3,6 +3,14 @@
   @moduledoc """
   {{description}}
   """
+  {{#hasComplexVars}}
+  {{#vars}}
+  {{^isPrimitiveType}}
+  {{#datatype}}alias {{#isListContainer}}{{moduleName}}.Model.{{items.datatype}}{{/isListContainer}}{{#isMapContainer}}{{moduleName}}.Model.{{items.datatype}}{{/isMapContainer}}{{^isDate}}{{^isDateTime}}{{^isMapContainer}}{{^isListContainer}}{{moduleName}}.Model.{{dataType}}{{/isListContainer}}{{/isMapContainer}}{{/isDateTime}}{{/isDate}}
+  {{/datatype}}
+  {{/isPrimitiveType}}
+  {{/vars}}
+  {{/hasComplexVars}}
 
   @derive [Poison.Encoder]
   defstruct [

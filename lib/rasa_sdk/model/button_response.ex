@@ -6,6 +6,7 @@ defmodule RasaSdk.Model.ButtonResponse do
   @moduledoc """
   Text with buttons which should be sent to the user.
   """
+  alias RasaSdk.Model.Button
 
   @derive [Poison.Encoder]
   defstruct [

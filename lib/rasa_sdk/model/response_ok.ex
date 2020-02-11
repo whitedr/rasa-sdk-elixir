@@ -6,6 +6,8 @@ defmodule RasaSdk.Model.ResponseOk do
   @moduledoc """
   Action was executed succesfully.
   """
+  alias RasaSdk.Model.Event
+  alias RasaSdk.Model.Response
 
   @derive [Poison.Encoder]
   defstruct [
