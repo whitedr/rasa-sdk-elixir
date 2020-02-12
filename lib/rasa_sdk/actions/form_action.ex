@@ -6,6 +6,7 @@ defmodule RasaSdk.Actions.FormAction do
 
   require Logger
 
+  @callback on_activate(Context.t()) :: Context.t()
   @callback required_slots(Context.t()) :: [String.t()]
   @callback slot_mappings() :: map()
   @callback validate_slot(Context.t(), String.t(), term()) :: Context.t()
@@ -22,6 +23,9 @@ defmodule RasaSdk.Actions.FormAction do
       # this slot is used to store information needed
       # to do the form handling
       @requested_slot "requested_slot"
+
+      # default implementation, overridable
+      def on_activate(context), do: context
 
       # default implementation, overridable
       def slot_mappings() do
@@ -350,7 +354,7 @@ defmodule RasaSdk.Actions.FormAction do
         |> add_event(slot_set(@requested_slot, nil))
       end
 
-      defoverridable slot_mappings: 0, validate: 1, validate_slot: 3
+      defoverridable on_activate: 1, slot_mappings: 0, validate: 1, validate_slot: 3
     end
   end
 end
