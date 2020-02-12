@@ -69,6 +69,7 @@ defmodule RasaSdk.Actions.FormAction do
 
             context
             |> set_active_form(name(), true)
+            |> on_activate()
           else
             Logger.debug("Validating pre-filled required slots. #{inspect(prefilled_slots)}")
 
@@ -76,6 +77,7 @@ defmodule RasaSdk.Actions.FormAction do
               validate_slot(acc, slot, value)
             end)
             |> set_active_form(name(), true)
+            |> on_activate()
           end
         end
       end
