@@ -9,11 +9,13 @@ defmodule RasaSdk.Model.TrackerActiveForm do
 
   @derive [Poison.Encoder]
   defstruct [
-    :name
+    :name,
+    :validate
   ]
 
   @type t :: %__MODULE__{
-    name: String.t | nil
+    name: String.t | nil,
+    validate: boolean() | nil
   }
 end
 

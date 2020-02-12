@@ -1205,6 +1205,10 @@ components:
               type: string
               description: Name of the acive form
               example: restaurant_form
+            validate:
+              type: boolean
+              description: Whether to perform validation on the form
+              example: true
 
     Error:
       type: object
