@@ -35,6 +35,7 @@ defmodule RasaSdk.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
+      {:dialyxir, "~> 1.0.0-rc.7", only: [:dev], runtime: false},
       {:tesla, "~> 1.2"},
       {:poison, "~> 3.0"},
       {:plug, "~> 1.8"}

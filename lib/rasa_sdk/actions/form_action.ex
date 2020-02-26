@@ -170,7 +170,7 @@ defmodule RasaSdk.Actions.FormAction do
         end
       end
 
-      defp request_next_slot(%Context{} = context) do
+      defp request_next_slot(context) do
         slots_needed =
           required_slots(context)
           |> Enum.filter(fn slot_name -> should_request_slot(context, slot_name) end)
@@ -180,7 +180,7 @@ defmodule RasaSdk.Actions.FormAction do
         end
       end
 
-      defp should_request_slot(%Context{} = context, slot_name) do
+      defp should_request_slot(context, slot_name) do
         value = get_slot(context, slot_name)
         is_nil(value)
       end
@@ -222,6 +222,7 @@ defmodule RasaSdk.Actions.FormAction do
       end
 
       defp to_list(value) when is_list(value), do: value
+
       defp to_list(value), do: [value]
 
       defp get_mappings_for_slot(slot_to_fill) do
@@ -252,21 +253,14 @@ defmodule RasaSdk.Actions.FormAction do
       end
 
       defp get_entity_value(entity_name, %Context{} = context) do
-        get_latest_entity_values(context, entity_name)
-        |> get_entity_value()
-      end
+        values = get_latest_entity_values(context, entity_name)
 
-      defp get_entity_value([]), do: nil
-
-      defp get_entity_value(value) when is_list(value) do
-        if Enum.count(value) == 1 do
-          List.first(value)
-        else
-          value
+        cond do
+          Enum.empty?(values) -> nil
+          Enum.count(values) == 1 -> List.first(values)
+          true -> values
         end
       end
-
-      defp get_entity_value(value), do: value
 
       def extract_other_slots(%Context{} = context) do
         slot_to_fill = get_slot(context, @requested_slot)
@@ -321,7 +315,7 @@ defmodule RasaSdk.Actions.FormAction do
 
               value ->
                 Logger.debug(
-                  "Successfully extracted '#{value}' for requested slot '#{slot_to_fill}'"
+                  "Successfully extracted '#{inspect(value)}' for requested slot '#{slot_to_fill}'"
                 )
 
                 Map.put(res, slot_to_fill, value)

@@ -7,17 +7,15 @@ defmodule RasaSdk.Actions.Context do
   require Logger
 
   defstruct [
-    :conversation_id,
     :request,
     :response,
     :error
   ]
 
   @type t :: %__MODULE__{
-          :conversation_id => String.t() | nil,
-          :request => Request.t() | nil,
-          :response => ResponseOk.t() | nil,
-          :error => ResponseRejected.t() | nil
+          request: Request.t(),
+          response: ResponseOk.t(),
+          error: ResponseRejected.t() | nil
         }
 
   def new(request) do
@@ -26,7 +24,8 @@ defmodule RasaSdk.Actions.Context do
       response: %ResponseOk{
         events: [],
         responses: []
-      }
+      },
+      error: nil
     }
   end
 
@@ -107,14 +106,6 @@ defmodule RasaSdk.Actions.Context do
         request: %Request{tracker: %Tracker{latest_input_channel: latest_input_channel}}
       }) do
     latest_input_channel
-    # latest_user_event =
-    #   events
-    #   |> Enum.reverse()
-    #   |> Enum.find(fn event -> event.event == "user" end)
-
-    # if not is_nil(latest_user_event) do
-    #   latest_user_event.input_channel
-    # end
   end
 
   def latest_event_time(%__MODULE__{
@@ -122,15 +113,6 @@ defmodule RasaSdk.Actions.Context do
       }) do
     latest_event_time
   end
-
-  # def latest_event_time(%__MODULE__{tracker: %Tracker{events: nil}}), do: nil
-
-  # def latest_event_time(%__MODULE__{tracker: %Tracker{events: events}}) do
-  #   case List.last(events) do
-  #     nil -> nil
-  #     event -> Map.get(event, "timestamp")
-  #   end
-  # end
 
   @default_message %{
     image: nil,
@@ -140,7 +122,7 @@ defmodule RasaSdk.Actions.Context do
     text: nil,
     buttons: nil
   }
-  @spec utter_message(__MODULE__.t(), keyword(), map()) :: __MODULE__.t()
+
   def utter_message(
         %__MODULE__{} = context,
         options \\ [],
@@ -156,7 +138,6 @@ defmodule RasaSdk.Actions.Context do
     end)
   end
 
-  @spec add_event(__MODULE__.t(), RasaSdk.Actions.Events.t()) :: __MODULE__.t()
   def add_event(%__MODULE__{} = context, event) do
     update_in(context, [Access.key(:response), Access.key(:events)], fn events ->
       events ++ [event]
