@@ -30,6 +30,8 @@ defmodule RasaSdk.Actions.Events do
 
   def restarted(timestamp \\ nil), do: %{event: "restart", timestamp: timestamp}
 
+  def session_started(timestamp \\ nil), do: %{event: "session_started", timestamp: timestamp}
+
   def user_utterance_reverted(timestamp \\ nil), do: %{event: "rewind", timestamp: timestamp}
 
   def all_slots_reset(timestamp \\ nil), do: %{event: "reset_slots", timestamp: timestamp}
