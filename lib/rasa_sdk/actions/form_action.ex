@@ -56,7 +56,12 @@ defmodule RasaSdk.Actions.FormAction do
           context
         else
           Logger.debug("Activated the form #{name()}")
-          context = add_event(context, form(name()))
+
+          context =
+            context
+            |> add_event(form(name()))
+            |> on_activate()
+            |> set_slots_from_events()
 
           prefilled_slots =
             required_slots(context)
@@ -69,7 +74,6 @@ defmodule RasaSdk.Actions.FormAction do
 
             context
             |> set_active_form(name(), true)
-            |> on_activate()
           else
             Logger.debug("Validating pre-filled required slots. #{inspect(prefilled_slots)}")
 
@@ -77,7 +81,6 @@ defmodule RasaSdk.Actions.FormAction do
               validate_slot(acc, slot, value)
             end)
             |> set_active_form(name(), true)
-            |> on_activate()
           end
         end
       end
@@ -93,7 +96,12 @@ defmodule RasaSdk.Actions.FormAction do
               }
             } = context
           ) do
-        Logger.debug("Validating user input #{inspect(tracker.latest_message)}")
+        Logger.debug(
+          "Validating user input #{
+            inspect(tracker.latest_message, pretty: true, limit: :infinity)
+          }"
+        )
+
         # extract other slots that were not requested
         # but set by corresponding entity or trigger intent mapping
         slot_values = extract_other_slots(context)
