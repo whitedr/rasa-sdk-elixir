@@ -115,7 +115,6 @@ defmodule RasaSdk.Actions.FormAction do
             |> Map.merge(extract_requested_slot(context))
 
           if Enum.empty?(slot_values) do
-            # TODO: raise exception instead?
             context
             |> set_error(name(), "Failed to extract slot #{slot_to_fill} with action #{name()}")
           else
@@ -291,8 +290,10 @@ defmodule RasaSdk.Actions.FormAction do
       end
 
       defp get_other_slot_value(%{type: "from_entity"} = slot_mapping, context) do
-        if slot_mapping.entity == slot_mapping.slot and intent_is_desired(slot_mapping, context) do
-          get_entity_value(slot_mapping.slot, context)
+        if intent_is_desired(slot_mapping, context) do
+          get_entity_value(slot_mapping.entity, context)
+        else
+          nil
         end
       end
 
