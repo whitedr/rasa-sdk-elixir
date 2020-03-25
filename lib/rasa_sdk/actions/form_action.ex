@@ -290,10 +290,8 @@ defmodule RasaSdk.Actions.FormAction do
       end
 
       defp get_other_slot_value(%{type: "from_entity"} = slot_mapping, context) do
-        if intent_is_desired(slot_mapping, context) do
+        if slot_mapping.entity == slot_mapping.slot and intent_is_desired(slot_mapping, context) do
           get_entity_value(slot_mapping.entity, context)
-        else
-          nil
         end
       end
 
