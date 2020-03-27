@@ -67,10 +67,10 @@ defmodule RasaSdk.Actions.Context do
   Get entity values found for the passed entity name in latest msg.
 
   If you are only interested in the first entity of a given type use
-  `get_latest_entity_values(tracker, "my_entity_name") |> List.first()`.
+  `get_latest_entities(tracker, "my_entity_name") |> List.first()`.
   If no entity is found `nil` is the default result.
   """
-  def get_latest_entity_values(
+  def get_latest_entities(
         %__MODULE__{
           request: %Request{tracker: %Tracker{latest_message: nil}}
         },
@@ -79,7 +79,7 @@ defmodule RasaSdk.Actions.Context do
     []
   end
 
-  def get_latest_entity_values(
+  def get_latest_entities(
         %__MODULE__{
           request: %Request{tracker: %Tracker{latest_message: %ParseResult{entities: nil}}}
         },
@@ -88,7 +88,7 @@ defmodule RasaSdk.Actions.Context do
     []
   end
 
-  def get_latest_entity_values(
+  def get_latest_entities(
         %__MODULE__{
           request: %Request{tracker: %Tracker{latest_message: %ParseResult{entities: entities}}}
         },
@@ -96,7 +96,6 @@ defmodule RasaSdk.Actions.Context do
       ) do
     entities
     |> Enum.filter(fn e -> e.entity == entity_type end)
-    |> Enum.map(fn e -> e.value end)
   end
 
   @doc """

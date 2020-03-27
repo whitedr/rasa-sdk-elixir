@@ -260,12 +260,19 @@ defmodule RasaSdk.Actions.FormAction do
       end
 
       defp get_entity_value(entity_name, %Context{} = context) do
-        values = get_latest_entity_values(context, entity_name)
+        values = get_latest_entities(context, entity_name)
 
         cond do
-          Enum.empty?(values) -> nil
-          Enum.count(values) == 1 -> List.first(values)
-          true -> values
+          Enum.empty?(values) ->
+            nil
+
+          Enum.count(values) == 1 ->
+            values
+            |> List.first()
+            |> Map.get(:value)
+
+          true ->
+            values
         end
       end
 
