@@ -198,7 +198,8 @@ defmodule RasaSdk.Actions.FormAction do
           type: "from_entity",
           entity: entity,
           intent: to_list(Keyword.get(opts, :intent, [])),
-          not_intent: to_list(Keyword.get(opts, :not_intent, []))
+          not_intent: to_list(Keyword.get(opts, :not_intent, [])),
+          overwrite: Keyword.get(opts, :overwrite, true)
         }
       end
 
@@ -207,7 +208,8 @@ defmodule RasaSdk.Actions.FormAction do
           type: "from_trigger_intent",
           value: value,
           intent: to_list(Keyword.get(opts, :intent, [])),
-          not_intent: to_list(Keyword.get(opts, :not_intent, []))
+          not_intent: to_list(Keyword.get(opts, :not_intent, [])),
+          overwrite: Keyword.get(opts, :overwrite, true)
         }
       end
 
@@ -216,7 +218,8 @@ defmodule RasaSdk.Actions.FormAction do
           type: "from_intent",
           value: value,
           intent: to_list(Keyword.get(opts, :intent, [])),
-          not_intent: to_list(Keyword.get(opts, :not_intent, []))
+          not_intent: to_list(Keyword.get(opts, :not_intent, [])),
+          overwrite: Keyword.get(opts, :overwrite, true)
         }
       end
 
@@ -224,7 +227,8 @@ defmodule RasaSdk.Actions.FormAction do
         %{
           type: "from_text",
           intent: to_list(Keyword.get(opts, :intent, [])),
-          not_intent: to_list(Keyword.get(opts, :not_intent, []))
+          not_intent: to_list(Keyword.get(opts, :not_intent, [])),
+          overwrite: Keyword.get(opts, :overwrite, true)
         }
       end
 
@@ -291,7 +295,15 @@ defmodule RasaSdk.Actions.FormAction do
           if is_nil(value) do
             acc
           else
-            Map.put(acc, mapping.slot, value)
+            if mapping.overwrite do
+              Map.put(acc, mapping.slot, value)
+            else
+              if is_nil(get_slot(context, mapping.slot)) do
+                Map.put(acc, mapping.slot, value)
+              else
+                acc
+              end
+            end
           end
         end)
       end
