@@ -13,9 +13,19 @@ defmodule RasaSdk.Actions.Plug do
       body_params
       |> Poison.Decode.decode(as: %RasaSdk.Model.Request{})
       |> Context.new()
-      |> Registry.execute()
 
-    conn |> send_response(context)
+    try do
+      send_response(conn, Registry.execute(context))
+    rescue
+      error ->
+        error_msg = Exception.message(error)
+
+        context =
+          context
+          |> Context.set_error(context.request.next_action, error_msg)
+
+        send_response(conn, context)
+    end
   end
 
   defp send_response(conn, %Context{response: response, error: nil}) do
