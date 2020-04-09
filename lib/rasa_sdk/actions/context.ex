@@ -139,7 +139,17 @@ defmodule RasaSdk.Actions.Context do
 
   def add_event(%__MODULE__{} = context, event) do
     update_in(context, [Access.key(:response), Access.key(:events)], fn events ->
-      events ++ [event]
+      if event.event == "slot" do
+        case Enum.find_index(events, &(&1.event == "slot" and &1.name == event.name)) do
+          nil ->
+            events ++ [event]
+
+          index ->
+            List.replace_at(events, index, event)
+        end
+      else
+        events ++ [event]
+      end
     end)
   end
 

@@ -745,7 +745,6 @@ defmodule RasaSdkActionsFormTest do
       assert context.response.events == [
                Events.form("validate_prefilled_slots"),
                Events.slot_set("some_other_slot", "some_other_value"),
-               Events.slot_set("some_slot", "validated_value"),
                Events.slot_set("some_slot", nil)
              ]
     end
