@@ -18,11 +18,15 @@ defmodule RasaSdk.Actions.Plug do
       send_response(conn, Registry.execute(context))
     rescue
       error ->
-        error_msg = Exception.message(error)
+        formatted_error = Exception.format(:error, error, __STACKTRACE__)
+
+        Logger.error(
+          "Action #{context.request.next_action} failed with reason: #{formatted_error}"
+        )
 
         context =
           context
-          |> Context.set_error(context.request.next_action, error_msg)
+          |> Context.set_error(context.request.next_action, Exception.message(error))
 
         send_response(conn, context)
     end
@@ -35,8 +39,6 @@ defmodule RasaSdk.Actions.Plug do
   end
 
   defp send_response(conn, %Context{error: error}) do
-    Logger.error("Action #{error.action_name} failed with reason: #{error.error}")
-
     conn
     |> put_resp_content_type("application/json")
     |> send_resp(400, Poison.encode!(error))
