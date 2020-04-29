@@ -78,7 +78,11 @@ defmodule RasaSdk.Actions.FormAction do
             Logger.debug("Validating pre-filled required slots. #{inspect(prefilled_slots)}")
 
             Enum.reduce(prefilled_slots, context, fn {slot, value}, acc ->
-              validate_slot(acc, slot, value)
+              if is_deactivated(acc) do
+                acc
+              else
+                validate_slot(acc, slot, value)
+              end
             end)
             |> set_active_form(name(), true)
           end
@@ -121,14 +125,22 @@ defmodule RasaSdk.Actions.FormAction do
             Logger.debug("Validating extracted slots: #{inspect(slot_values)}")
 
             Enum.reduce(slot_values, context, fn {slot, value}, acc ->
-              validate_slot(acc, slot, value)
+              if is_deactivated(acc) do
+                acc
+              else
+                validate_slot(acc, slot, value)
+              end
             end)
           end
         else
           Logger.debug("Validating extracted slots: #{inspect(slot_values)}")
 
           Enum.reduce(slot_values, context, fn {slot, value}, acc ->
-            validate_slot(acc, slot, value)
+            if is_deactivated(acc) do
+              acc
+            else
+              validate_slot(acc, slot, value)
+            end
           end)
         end
       end
@@ -374,6 +386,10 @@ defmodule RasaSdk.Actions.FormAction do
         context
         |> add_event(form(nil))
         |> add_event(slot_set(@requested_slot, nil))
+      end
+
+      defp is_deactivated(%Context{response: %{events: events}}) do
+        !is_nil(Enum.find_index(events, &(&1.event == "form" and &1.name == nil)))
       end
 
       defoverridable on_activate: 1, slot_mappings: 0, validate: 1, validate_slot: 3
