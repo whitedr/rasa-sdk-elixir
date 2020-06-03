@@ -70,10 +70,13 @@ defmodule RasaSdk.Actions.Context do
   `get_latest_entities(tracker, "my_entity_name") |> List.first()`.
   If no entity is found `nil` is the default result.
   """
+  def get_latest_entities(context, entity_type, opts \\ [])
+
   def get_latest_entities(
         %__MODULE__{
           request: %Request{tracker: %Tracker{latest_message: nil}}
         },
+        _,
         _
       ) do
     []
@@ -83,6 +86,7 @@ defmodule RasaSdk.Actions.Context do
         %__MODULE__{
           request: %Request{tracker: %Tracker{latest_message: %ParseResult{entities: nil}}}
         },
+        _,
         _
       ) do
     []
@@ -92,11 +96,21 @@ defmodule RasaSdk.Actions.Context do
         %__MODULE__{
           request: %Request{tracker: %Tracker{latest_message: %ParseResult{entities: entities}}}
         },
-        entity_type
+        entity_type,
+        opts
       ) do
+    role = Keyword.get(opts, :role)
+    group = Keyword.get(opts, :group)
+
     entities
-    |> Enum.filter(fn e -> e.entity == entity_type end)
+    # |> Enum.filter(fn e -> e.entity == entity_type end)
+    |> Enum.filter(&filter_entity_by(&1, :entity, entity_type))
+    |> Enum.filter(&filter_entity_by(&1, :role, role))
+    |> Enum.filter(&filter_entity_by(&1, :group, group))
   end
+
+  defp filter_entity_by(_entity, _key, nil), do: true
+  defp filter_entity_by(entity, field, value), do: Map.get(entity, field) == value
 
   @doc """
   Get the name of the input_channel of the latest UserUttered event

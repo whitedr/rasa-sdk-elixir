@@ -37,6 +37,11 @@ defmodule RasaSdk.Actions.FormAction do
         add_event(context, slot_set(slot, value))
       end
 
+      def request_slot(%Context{request: %Request{tracker: tracker}} = context, slot) do
+        context
+        |> utter_message([template: "utter_ask_#{slot}"], tracker.slots)
+      end
+
       def run(%Context{} = context) do
         context
         |> activate()
@@ -181,7 +186,7 @@ defmodule RasaSdk.Actions.FormAction do
             Logger.debug("Request next slot #{slot_name}")
 
             context
-            |> utter_message([template: "utter_ask_#{slot_name}"], tracker.slots)
+            |> request_slot(slot_name)
             |> add_event(slot_set(@requested_slot, slot_name))
           end
         else
@@ -211,7 +216,9 @@ defmodule RasaSdk.Actions.FormAction do
           entity: entity,
           intent: to_list(Keyword.get(opts, :intent, [])),
           not_intent: to_list(Keyword.get(opts, :not_intent, [])),
-          overwrite: Keyword.get(opts, :overwrite, true)
+          overwrite: Keyword.get(opts, :overwrite, true),
+          role: Keyword.get(opts, :role),
+          group: Keyword.get(opts, :group)
         }
       end
 
@@ -275,8 +282,12 @@ defmodule RasaSdk.Actions.FormAction do
         intent_not_blacklisted or Enum.member?(intents, intent)
       end
 
-      defp get_entity_value(entity_name, %Context{} = context) do
-        values = get_latest_entities(context, entity_name)
+      defp get_entity_value(slot_mapping, %Context{} = context) do
+        values =
+          get_latest_entities(context, slot_mapping.entity,
+            role: slot_mapping.role,
+            group: slot_mapping.group
+          )
 
         cond do
           Enum.empty?(values) ->
@@ -322,7 +333,7 @@ defmodule RasaSdk.Actions.FormAction do
 
       defp get_other_slot_value(%{type: "from_entity"} = slot_mapping, context) do
         if slot_mapping.entity == slot_mapping.slot and intent_is_desired(slot_mapping, context) do
-          get_entity_value(slot_mapping.entity, context)
+          get_entity_value(slot_mapping, context)
         end
       end
 
@@ -364,8 +375,8 @@ defmodule RasaSdk.Actions.FormAction do
         end)
       end
 
-      defp get_requested_slot_value(%{type: "from_entity", entity: entity}, context) do
-        get_entity_value(entity, context)
+      defp get_requested_slot_value(%{type: "from_entity"} = slot_mapping, context) do
+        get_entity_value(slot_mapping, context)
       end
 
       defp get_requested_slot_value(%{type: "from_intent", value: value}, _), do: value
@@ -392,7 +403,11 @@ defmodule RasaSdk.Actions.FormAction do
         !is_nil(Enum.find_index(events, &(&1.event == "form" and &1.name == nil)))
       end
 
-      defoverridable on_activate: 1, slot_mappings: 0, validate: 1, validate_slot: 3
+      defoverridable on_activate: 1,
+                     slot_mappings: 0,
+                     validate: 1,
+                     validate_slot: 3,
+                     request_slot: 2
     end
   end
 end

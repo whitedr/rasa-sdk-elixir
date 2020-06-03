@@ -1022,6 +1022,10 @@ components:
           description: Type of the entity
         confidence:
           type: number
+        role:
+          type: string
+        group:
+          type: string
       required: ["start", "end", "value", "entity"]
 
     Intent:
