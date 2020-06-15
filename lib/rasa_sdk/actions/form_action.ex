@@ -299,7 +299,7 @@ defmodule RasaSdk.Actions.FormAction do
             |> Map.get(:value)
 
           true ->
-            values
+            Enum.map(values, & &1.value)
         end
       end
 
