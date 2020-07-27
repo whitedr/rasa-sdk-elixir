@@ -17,7 +17,7 @@ by adding `rasa_sdk` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
-  [{:rasa_sdk, "~> 0.1.0"}]
+  [{:rasa_sdk, "~> 0.5.0"}]
 end
 ```
 
