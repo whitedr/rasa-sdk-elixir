@@ -13,7 +13,9 @@ defmodule RasaSdk.Model.Entity do
     :end,
     :value,
     :entity,
-    :confidence
+    :confidence,
+    :role,
+    :group
   ]
 
   @type t :: %__MODULE__{
@@ -21,7 +23,9 @@ defmodule RasaSdk.Model.Entity do
     end: integer(),
     value: String.t,
     entity: String.t,
-    confidence: float() | nil
+    confidence: float() | nil,
+    role: String.t | nil,
+    group: String.t | nil
   }
 end
 

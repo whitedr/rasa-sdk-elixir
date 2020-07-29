@@ -63,7 +63,9 @@ defmodule RasaSdk.RequestBuilder do
         |> add_param(location, key, value)
         |> add_optional_params(definitions, tail)
       _ ->
-        add_optional_params(request, definitions, tail)
+        request
+        |> Map.put(key, value)
+        |> add_optional_params(definitions, tail)
     end
   end
 

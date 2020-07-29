@@ -6,22 +6,47 @@ defmodule RasaSdk.Model.Event do
   @moduledoc """
   
   """
+  alias RasaSdk.Model.Map
+  alias RasaSdk.Model.Map
+  alias RasaSdk.Model.Map
 
   @derive [Poison.Encoder]
   defstruct [
     :event,
+    :text,
+    :parse_data,
+    :input_channel,
+    :data,
+    :metadata,
+    :name,
+    :value,
+    :policy,
+    :confidence,
     :timestamp
   ]
 
   @type t :: %__MODULE__{
     event: String.t,
-    timestamp: integer() | nil
+    text: String.t | nil,
+    parse_data: Map | nil,
+    input_channel: String.t | nil,
+    data: Map | nil,
+    metadata: Map | nil,
+    name: String.t | nil,
+    value: String.t | nil,
+    policy: String.t | nil,
+    confidence: float() | nil,
+    timestamp: float() | nil
   }
 end
 
 defimpl Poison.Decoder, for: RasaSdk.Model.Event do
-  def decode(value, _options) do
+  import RasaSdk.Deserializer
+  def decode(value, options) do
     value
+    |> deserialize(:parse_data, :struct, RasaSdk.Model.Map, options)
+    |> deserialize(:data, :struct, RasaSdk.Model.Map, options)
+    |> deserialize(:metadata, :struct, RasaSdk.Model.Map, options)
   end
 end
 
