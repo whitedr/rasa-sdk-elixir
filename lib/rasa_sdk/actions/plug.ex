@@ -3,12 +3,12 @@ defmodule RasaSdk.Actions.Plug do
   alias RasaSdk.Actions.{Context, Registry}
   require Logger
 
-  def init(options) do
+  def init(opts) do
     # initialize options
-    options
+    opts
   end
 
-  def call(%Plug.Conn{body_params: body_params} = conn, _opts) do
+  def call(%Plug.Conn{body_params: body_params} = conn, opts) do
     context =
       body_params
       |> Poison.Decode.decode(as: %RasaSdk.Model.Request{})
@@ -24,11 +24,17 @@ defmodule RasaSdk.Actions.Plug do
           "Action #{context.request.next_action} failed with reason: #{formatted_error}"
         )
 
-        context =
-          context
-          |> Context.set_error(context.request.next_action, Exception.message(error))
+        if Keyword.has_key?(opts, :default_error_handler) do
+          default_error_handler = Keyword.get(opts, :default_error_handler)
+          context = apply(default_error_handler, :run, [context])
+          send_response(conn, context)
+        else
+          context =
+            context
+            |> Context.set_error(context.request.next_action, Exception.message(error))
 
-        send_response(conn, context)
+          send_response(conn, context)
+        end
     end
   end
 
